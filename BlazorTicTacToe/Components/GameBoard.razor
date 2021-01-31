@@ -1,0 +1,13 @@
+﻿<h3>GameBoard Component</h3>
+
+@foreach (var row in GameBoardSquares())
+{
+  <div class="row">
+    @foreach (var col in row)
+    {
+      <div class="col-sm-4">
+        <GameBoardSquare></GameBoardSquare>
+      </div>
+    }
+  </div>
+}

@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30907.101
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorTicTacToe", "BlazorTicTacToe\BlazorTicTacToe.csproj", "{379D10EF-AC82-4FD4-B16A-0025B040E215}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{379D10EF-AC82-4FD4-B16A-0025B040E215}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{379D10EF-AC82-4FD4-B16A-0025B040E215}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{379D10EF-AC82-4FD4-B16A-0025B040E215}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{379D10EF-AC82-4FD4-B16A-0025B040E215}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7F053581-D314-4E65-9BEE-5DCF10353B65}
+	EndGlobalSection
+EndGlobal

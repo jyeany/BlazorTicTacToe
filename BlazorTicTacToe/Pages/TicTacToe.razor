@@ -1,0 +1,23 @@
+﻿@page "/"
+@using Services
+
+@if (GameManager.CurrentGameType == GameType.NotChosen)
+{
+<div>
+    <h3>Please Choose the Number of Players</h3>
+    <button class="btn btn-primary"
+    @onclick="@(e => StartGame(GameType.OnePlayer))">
+        One Player
+    </button>
+    <button class="btn btn-info"
+    @onclick="@(e => StartGame(GameType.TwoPlayer))">
+        Two Player
+    </button>
+</div>
+}
+else
+{
+    <h3>Display Game</h3>
+    <GameBoard></GameBoard>
+}
+
