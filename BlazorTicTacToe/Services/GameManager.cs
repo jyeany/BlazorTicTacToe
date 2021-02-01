@@ -1,19 +1,63 @@
 ﻿using BlazorTicTacToe.Models;
+using System;
+using System.Collections.Generic;
 
 namespace BlazorTicTacToe.Services
 {
-    public class GameManager : IGameManage
+    public enum GameType { NotChosen = 0, OnePlayer, TwoPlayer };
+
+    public class GameManager : IObservable<SquareValue>
     {
         public GameType CurrentGameType { get; set; }
 
         public GameBoardModel CurrentGameBoard { get; set; }
+
+        public SquareValue PlayerSquareValue { get; set; }
+
+        private List<IObserver<SquareValue>> turnChangeObservers = 
+            new List<IObserver<SquareValue>>();
 
         public const int NUM_ROWS_COLS = 3;
 
         public void StartGame(GameType gameType)
         {
             this.CurrentGameType = gameType;
+            this.PlayerSquareValue = SquareValue.X; // x always goes first
             initializeBoard();
+        }
+
+        public void MakeMove(GameBoardSquareModel squareModel)
+        {
+            if (squareModel.CurrentSquareValue == SquareValue.NotSet)
+            {
+                squareModel.CurrentSquareValue = PlayerSquareValue;
+                if (PlayerSquareValue == SquareValue.X)
+                {
+                    PlayerSquareValue = SquareValue.O;
+                }
+                else
+                {
+                    PlayerSquareValue = SquareValue.X;
+                }
+                NotifyTurnChangeObservers(PlayerSquareValue);
+            }
+        }
+
+        public IDisposable Subscribe(IObserver<SquareValue> observer)
+        {
+            if (!turnChangeObservers.Contains(observer))
+            {
+                turnChangeObservers.Add(observer);
+            }
+            return new Unsubscriber<SquareValue>(turnChangeObservers, observer);
+        }
+
+        private void NotifyTurnChangeObservers(SquareValue value)
+        {
+            foreach (var sqValObserver in turnChangeObservers)
+            {
+                sqValObserver.OnNext(value);
+            }
         }
 
         private void initializeBoard()
@@ -33,5 +77,24 @@ namespace BlazorTicTacToe.Services
             }
             this.CurrentGameBoard = gameBoard;
         }
+
+        internal class Unsubscriber<SquareInfo> : IDisposable
+        {
+            private List<IObserver<SquareInfo>> _observers;
+            private IObserver<SquareInfo> _observer;
+
+            internal Unsubscriber(List<IObserver<SquareInfo>> observers, IObserver<SquareInfo> observer)
+            {
+                this._observers = observers;
+                this._observer = observer;
+            }
+
+            public void Dispose()
+            {
+                if (_observers.Contains(_observer))
+                    _observers.Remove(_observer);
+            }
+        }
+
     }
 }

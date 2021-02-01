@@ -14,5 +14,18 @@ namespace BlazorTicTacToe.Models
         public int Column { get; set; }
 
         public SquareValue CurrentSquareValue { get; set; }
+
+        public override string ToString()
+        {
+            switch (CurrentSquareValue)
+            {
+                case SquareValue.X:
+                    return "X";
+                case SquareValue.O:
+                    return "O";
+                default:
+                    return "--";
+            }            
+        }
     }
 }
