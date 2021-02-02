@@ -89,6 +89,30 @@ namespace BlazorTicTacToeXUnit.Services
             Assert.Equal(SquareValue.X, result);
         }
 
+        [Fact]
+        public void DetectWinner_ForwardSlant()
+        {
+            GameBoardModel arg = new GameBoardModel();
+            GenerateEmptySquares(arg.Squares);
+            arg.Squares[0][0] = CreateSquareModelX();
+            arg.Squares[1][1] = CreateSquareModelX();
+            arg.Squares[2][2] = CreateSquareModelX();
+            SquareValue result = gameWinDetector.DetectWinner(arg);
+            Assert.Equal(SquareValue.X, result);
+        }
+
+        [Fact]
+        public void DetectWinner_BackSlant()
+        {
+            GameBoardModel arg = new GameBoardModel();
+            GenerateEmptySquares(arg.Squares);
+            arg.Squares[0][2] = CreateSquareModelX();
+            arg.Squares[1][1] = CreateSquareModelX();
+            arg.Squares[2][0] = CreateSquareModelX();
+            SquareValue result = gameWinDetector.DetectWinner(arg);
+            Assert.Equal(SquareValue.X, result);
+        }
+
         private GameBoardSquareModel[][] GenerateEmptySquares(GameBoardSquareModel[][] squares)
         {
             for (int i = 0; i < GameManager.NUM_ROWS_COLS; i++)

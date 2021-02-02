@@ -8,12 +8,43 @@ namespace BlazorTicTacToeWeb.Services
         {
             SquareValue result = SquareValue.NotSet;
             var squares = gameBoardModel.Squares;
-            SquareValue rowColWin = HasRowOrColumnWin(squares);
-            if (rowColWin != SquareValue.NotSet)
+            SquareValue slantWin = HasSlantWin(squares);
+            if (slantWin == SquareValue.NotSet)
             {
-                result = rowColWin;
+                SquareValue rowColWin = HasRowOrColumnWin(squares);
+                if (rowColWin != SquareValue.NotSet)
+                {
+                    result = rowColWin;
+                }
             }
+            else
+            {
+                result = slantWin;
+            }
+            
             return result;
+        }
+
+        private SquareValue HasSlantWin(GameBoardSquareModel[][] squares)
+        {
+            SquareValue slantWin;
+            if (squares[0][0].CurrentSquareValue != SquareValue.NotSet
+                && squares[0][0].CurrentSquareValue == squares[1][1].CurrentSquareValue
+                && squares[1][1].CurrentSquareValue == squares[2][2].CurrentSquareValue)
+            {
+                slantWin = squares[0][0].CurrentSquareValue;
+            }
+            else if (squares[0][2].CurrentSquareValue != SquareValue.NotSet
+                && squares[0][2].CurrentSquareValue == squares[1][1].CurrentSquareValue
+                && squares[1][1].CurrentSquareValue == squares[2][0].CurrentSquareValue)
+            {
+                slantWin = squares[1][1].CurrentSquareValue;
+            }
+            else
+            {
+                slantWin = SquareValue.NotSet;
+            }
+            return slantWin;
         }
 
         private SquareValue HasRowOrColumnWin(GameBoardSquareModel[][] squares)
