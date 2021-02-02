@@ -1,8 +1,8 @@
-﻿using BlazorTicTacToe.Models;
-using BlazorTicTacToe.Services;
+﻿using BlazorTicTacToeWeb.Models;
+using BlazorTicTacToeWeb.Services;
 using Microsoft.AspNetCore.Components;
 
-namespace BlazorTicTacToe.Components
+namespace BlazorTicTacToeWeb.Components
 {
     public partial class GameBoardSquare
     {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace BlazorTicTacToe.Models
+namespace BlazorTicTacToeWeb.Models
 {
     public enum SquareValue { NotSet = 0, X, O }
 

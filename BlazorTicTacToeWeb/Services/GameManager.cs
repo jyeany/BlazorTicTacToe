@@ -1,13 +1,16 @@
-﻿using BlazorTicTacToe.Models;
+﻿using BlazorTicTacToeWeb.Models;
+using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 
-namespace BlazorTicTacToe.Services
+namespace BlazorTicTacToeWeb.Services
 {
     public enum GameType { NotChosen = 0, OnePlayer, TwoPlayer };
 
     public class GameManager : IObservable<SquareValue>
     {
+        private readonly GameWinDetector gameWinDetector;
+
         public GameType CurrentGameType { get; set; }
 
         public GameBoardModel CurrentGameBoard { get; set; }
@@ -18,6 +21,11 @@ namespace BlazorTicTacToe.Services
             new List<IObserver<SquareValue>>();
 
         public const int NUM_ROWS_COLS = 3;
+
+        public GameManager(GameWinDetector gameWinDetector)
+        {
+            this.gameWinDetector = gameWinDetector;
+        }
 
         public void StartGame(GameType gameType)
         {
@@ -31,15 +39,16 @@ namespace BlazorTicTacToe.Services
             if (squareModel.CurrentSquareValue == SquareValue.NotSet)
             {
                 squareModel.CurrentSquareValue = PlayerSquareValue;
-                if (PlayerSquareValue == SquareValue.X)
+                SquareValue winnerValue = gameWinDetector.DetectWinner(CurrentGameBoard);
+                if (winnerValue == SquareValue.NotSet)
                 {
-                    PlayerSquareValue = SquareValue.O;
+                    SwitchPlayer();
+                    NotifyTurnChangeObservers(PlayerSquareValue);
                 }
                 else
                 {
-                    PlayerSquareValue = SquareValue.X;
+                    Console.WriteLine($"The winner is: {winnerValue}");
                 }
-                NotifyTurnChangeObservers(PlayerSquareValue);
             }
         }
 
@@ -50,6 +59,18 @@ namespace BlazorTicTacToe.Services
                 turnChangeObservers.Add(observer);
             }
             return new Unsubscriber<SquareValue>(turnChangeObservers, observer);
+        }
+
+        private void SwitchPlayer()
+        {
+            if (PlayerSquareValue == SquareValue.X)
+            {
+                PlayerSquareValue = SquareValue.O;
+            }
+            else
+            {
+                PlayerSquareValue = SquareValue.X;
+            }            
         }
 
         private void NotifyTurnChangeObservers(SquareValue value)

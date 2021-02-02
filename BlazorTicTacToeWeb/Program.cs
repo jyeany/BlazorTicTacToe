@@ -1,11 +1,11 @@
-using BlazorTicTacToe.Services;
+using BlazorTicTacToeWeb.Services;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace BlazorTicTacToe
+namespace BlazorTicTacToeWeb
 {
     public class Program
     {
@@ -14,8 +14,10 @@ namespace BlazorTicTacToe
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
-            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });
-            builder.Services.AddSingleton<GameManager>();
+            builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });            
+            builder.Services
+                .AddSingleton<GameManager>()
+                .AddSingleton<GameWinDetector>();            
 
             await builder.Build().RunAsync();
         }

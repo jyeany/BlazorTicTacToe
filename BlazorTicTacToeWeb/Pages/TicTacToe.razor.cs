@@ -1,11 +1,7 @@
-﻿using BlazorTicTacToe.Services;
+﻿using BlazorTicTacToeWeb.Services;
 using Microsoft.AspNetCore.Components;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace BlazorTicTacToe.Pages
+namespace BlazorTicTacToeWeb.Pages
 {
     public partial class TicTacToe
     {

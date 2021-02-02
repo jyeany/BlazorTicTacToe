@@ -1,6 +1,6 @@
-﻿using BlazorTicTacToe.Services;
+﻿using BlazorTicTacToeWeb.Services;
 
-namespace BlazorTicTacToe.Models
+namespace BlazorTicTacToeWeb.Models
 {
     public class GameBoardModel
     {

@@ -1,12 +1,9 @@
-﻿using BlazorTicTacToe.Models;
-using BlazorTicTacToe.Services;
+﻿using BlazorTicTacToeWeb.Models;
+using BlazorTicTacToeWeb.Services;
 using Microsoft.AspNetCore.Components;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace BlazorTicTacToe.Components
+namespace BlazorTicTacToeWeb.Components
 {
     public partial class CurrentPlayerPrompt: IObserver<SquareValue>
     {
