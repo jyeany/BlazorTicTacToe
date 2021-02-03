@@ -1,4 +1,8 @@
-﻿@foreach (var row in GameBoardSquares())
+﻿@using BlazorTicTacToeWeb.Models
+
+@if (GameWinner == SquareValue.NotSet)
+{
+@foreach (var row in GameBoardSquares())
 {
   <div class="row m-3">
     @foreach (var col in row)
@@ -10,3 +14,8 @@
   </div>
 }
 <CurrentPlayerPrompt></CurrentPlayerPrompt>
+}
+else
+{
+    <p>The winner is: @GameWinner</p>
+}

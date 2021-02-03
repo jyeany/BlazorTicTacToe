@@ -7,7 +7,7 @@ namespace BlazorTicTacToeWeb.Services
 {
     public enum GameType { NotChosen = 0, OnePlayer, TwoPlayer };
 
-    public class GameManager : IObservable<SquareValue>
+    public class GameManager : IObservable<SquareValue>, IGameWinObservable
     {
         private readonly GameWinDetector gameWinDetector;
 
@@ -16,6 +16,10 @@ namespace BlazorTicTacToeWeb.Services
         public GameBoardModel CurrentGameBoard { get; set; }
 
         public SquareValue PlayerSquareValue { get; set; }
+
+        public SquareValue GameWinner { get; set; }
+
+        private List<IGameWinObserver> gameWinObservers = new List<IGameWinObserver>();
 
         private List<IObserver<SquareValue>> turnChangeObservers = 
             new List<IObserver<SquareValue>>();
@@ -29,8 +33,8 @@ namespace BlazorTicTacToeWeb.Services
 
         public void StartGame(GameType gameType)
         {
-            this.CurrentGameType = gameType;
-            this.PlayerSquareValue = SquareValue.X; // x always goes first
+            CurrentGameType = gameType;
+            PlayerSquareValue = SquareValue.X; // x always goes first
             initializeBoard();
         }
 
@@ -47,7 +51,8 @@ namespace BlazorTicTacToeWeb.Services
                 }
                 else
                 {
-                    Console.WriteLine($"The winner is: {winnerValue}");
+                    GameWinner = winnerValue;
+                    NotifySubscribersOfWin();
                 }
             }
         }
@@ -97,6 +102,24 @@ namespace BlazorTicTacToeWeb.Services
                 }
             }
             this.CurrentGameBoard = gameBoard;
+        }
+
+        public void GameWinSubscribe(IGameWinObserver observer)
+        {
+            this.gameWinObservers.Add(observer);
+        }
+
+        public void GameWinUnsubscribe(IGameWinObserver observer)
+        {
+            this.gameWinObservers.Remove(observer);
+        }
+
+        public void NotifySubscribersOfWin()
+        {
+            foreach (var observer in gameWinObservers)
+            {
+                observer.GameWonBy(GameWinner);
+            }
         }
 
         internal class Unsubscriber<SquareInfo> : IDisposable
