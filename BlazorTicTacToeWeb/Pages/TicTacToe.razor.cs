@@ -6,7 +6,7 @@ namespace BlazorTicTacToeWeb.Pages
     public partial class TicTacToe
     {
         [Inject]
-        protected GameManager GameManager { get; set; }
+        protected IGameManager GameManager { get; set; }
 
         private void StartGame(GameType gameType)
         {

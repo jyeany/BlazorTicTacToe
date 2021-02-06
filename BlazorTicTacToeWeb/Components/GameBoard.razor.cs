@@ -9,7 +9,7 @@ namespace BlazorTicTacToeWeb.Components
     public partial class GameBoard: IGameWinObserver
     {
         [Inject]
-        protected GameManager GameManager { get; set; }
+        protected IGameManager GameManager { get; set; }
 
         protected SquareValue CurrentPlayerSquareValue { get; set; }
         

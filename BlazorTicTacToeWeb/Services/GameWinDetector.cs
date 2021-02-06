@@ -2,7 +2,7 @@
 
 namespace BlazorTicTacToeWeb.Services
 {
-    public class GameWinDetector
+    public class GameWinDetector : IGameWinDetector
     {
         public SquareValue DetectWinner(GameBoardModel gameBoardModel)
         {
@@ -50,11 +50,11 @@ namespace BlazorTicTacToeWeb.Services
         private SquareValue HasRowOrColumnWin(GameBoardSquareModel[][] squares)
         {
             SquareValue winningValue = SquareValue.NotSet;
-            for (int i = 0; i < GameManager.NUM_ROWS_COLS; i++)
+            for (int i = 0; i < GameManager.NumRowsCols; i++)
             {
                 int rowMatches = 0;
                 int columnMatches = 0;
-                for (int j = 0; j < GameManager.NUM_ROWS_COLS; j++)
+                for (int j = 0; j < GameManager.NumRowsCols; j++)
                 {
                     var currentRowValue = squares[i][j].CurrentSquareValue;
                     var currentColumnValue = squares[j][i].CurrentSquareValue;
@@ -70,11 +70,12 @@ namespace BlazorTicTacToeWeb.Services
                         columnMatches++;
                     }
                 }
-                if (rowMatches == GameManager.NUM_ROWS_COLS)
+                if (rowMatches == GameManager.NumRowsCols)
                 {
                     winningValue = squares[i][1].CurrentSquareValue;
                     break;
-                } else if (columnMatches == GameManager.NUM_ROWS_COLS)
+                } 
+                else if (columnMatches == GameManager.NumRowsCols)
                 {
                     winningValue = squares[1][i].CurrentSquareValue;
                     break;

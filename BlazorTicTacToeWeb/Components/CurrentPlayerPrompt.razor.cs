@@ -8,7 +8,7 @@ namespace BlazorTicTacToeWeb.Components
     public partial class CurrentPlayerPrompt: IObserver<SquareValue>
     {
         [Inject]
-        protected GameManager GameManager { get; set; }
+        protected IGameManager GameManager { get; set; }
 
         public SquareValue CurrentSquareValue { get; set; }
 

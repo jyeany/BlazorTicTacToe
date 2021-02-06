@@ -5,17 +5,17 @@ namespace BlazorTicTacToeWeb.Models
     public class GameBoardModel
     {
         public GameBoardSquareModel[][] Squares { get; }
-        private GameBoardSquareModel[][] squares = 
-            new GameBoardSquareModel[GameManager.NUM_ROWS_COLS][]
+        private GameBoardSquareModel[][] _squares = 
+            new GameBoardSquareModel[GameManager.NumRowsCols][]
             {
-                new GameBoardSquareModel[GameManager.NUM_ROWS_COLS],
-                new GameBoardSquareModel[GameManager.NUM_ROWS_COLS],
-                new GameBoardSquareModel[GameManager.NUM_ROWS_COLS]
+                new GameBoardSquareModel[GameManager.NumRowsCols],
+                new GameBoardSquareModel[GameManager.NumRowsCols],
+                new GameBoardSquareModel[GameManager.NumRowsCols]
             };
         
         public GameBoardModel()
         {
-            this.Squares = squares;
+            this.Squares = _squares;
         }
     }
 }

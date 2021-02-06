@@ -7,19 +7,19 @@ namespace BlazorTicTacToeWeb.Components
     public partial class GameBoardSquare
     {
         [Parameter]
-        public GameBoardSquareModel gameBoardSquareModel { get; set; }
+        public GameBoardSquareModel GameBoardSquareModel { get; set; }
 
         [Inject]
-        protected GameManager GameManager { get; set; }
+        protected IGameManager GameManager { get; set; }
 
         public void HandleClick()
         {
-            GameManager.MakeMove(this.gameBoardSquareModel);
+            GameManager.MakeMove(this.GameBoardSquareModel);
         }
 
         public string BtnTypeClass()
         {
-            switch (gameBoardSquareModel.CurrentSquareValue)
+            switch (GameBoardSquareModel.CurrentSquareValue)
             {
                 case SquareValue.X:
                     return "btn-info";

@@ -1,5 +1,4 @@
 ﻿using BlazorTicTacToeWeb.Models;
-using Microsoft.AspNetCore.Components;
 using System;
 using System.Collections.Generic;
 
@@ -7,9 +6,9 @@ namespace BlazorTicTacToeWeb.Services
 {
     public enum GameType { NotChosen = 0, OnePlayer, TwoPlayer };
 
-    public class GameManager : IObservable<SquareValue>, IGameWinObservable
+    public class GameManager : IGameManager
     {
-        private readonly GameWinDetector gameWinDetector;
+        private readonly IGameWinDetector _gameWinDetector;
 
         public GameType CurrentGameType { get; set; }
 
@@ -19,23 +18,22 @@ namespace BlazorTicTacToeWeb.Services
 
         public SquareValue GameWinner { get; set; }
 
-        private List<IGameWinObserver> gameWinObservers = new List<IGameWinObserver>();
+        private readonly List<IGameWinObserver> _gameWinObservers = new();
 
-        private List<IObserver<SquareValue>> turnChangeObservers = 
-            new List<IObserver<SquareValue>>();
+        private readonly List<IObserver<SquareValue>> _turnChangeObservers = new();
 
-        public const int NUM_ROWS_COLS = 3;
+        public const int NumRowsCols = 3;
 
-        public GameManager(GameWinDetector gameWinDetector)
+        public GameManager(IGameWinDetector gameWinDetector)
         {
-            this.gameWinDetector = gameWinDetector;
+            this._gameWinDetector = gameWinDetector;
         }
 
         public void StartGame(GameType gameType)
         {
             CurrentGameType = gameType;
             PlayerSquareValue = SquareValue.X; // x always goes first
-            initializeBoard();
+            InitializeBoard();
         }
 
         public void MakeMove(GameBoardSquareModel squareModel)
@@ -43,7 +41,7 @@ namespace BlazorTicTacToeWeb.Services
             if (squareModel.CurrentSquareValue == SquareValue.NotSet)
             {
                 squareModel.CurrentSquareValue = PlayerSquareValue;
-                SquareValue winnerValue = gameWinDetector.DetectWinner(CurrentGameBoard);
+                SquareValue winnerValue = _gameWinDetector.DetectWinner(CurrentGameBoard);
                 if (winnerValue == SquareValue.NotSet)
                 {
                     SwitchPlayer();
@@ -59,75 +57,70 @@ namespace BlazorTicTacToeWeb.Services
 
         public IDisposable Subscribe(IObserver<SquareValue> observer)
         {
-            if (!turnChangeObservers.Contains(observer))
+            if (!_turnChangeObservers.Contains(observer))
             {
-                turnChangeObservers.Add(observer);
+                _turnChangeObservers.Add(observer);
             }
-            return new Unsubscriber<SquareValue>(turnChangeObservers, observer);
-        }
-
-        private void SwitchPlayer()
-        {
-            if (PlayerSquareValue == SquareValue.X)
-            {
-                PlayerSquareValue = SquareValue.O;
-            }
-            else
-            {
-                PlayerSquareValue = SquareValue.X;
-            }            
-        }
-
-        private void NotifyTurnChangeObservers(SquareValue value)
-        {
-            foreach (var sqValObserver in turnChangeObservers)
-            {
-                sqValObserver.OnNext(value);
-            }
-        }
-
-        private void initializeBoard()
-        {
-            GameBoardModel gameBoard = new GameBoardModel();
-            GameBoardSquareModel[][] squares = gameBoard.Squares;
-            for (int i = 0; i < NUM_ROWS_COLS; i++)
-            {
-                for (int j = 0; j < NUM_ROWS_COLS; j++)
-                {
-                    GameBoardSquareModel toAdd = new GameBoardSquareModel();
-                    toAdd.Row = i;
-                    toAdd.Column = j;
-                    toAdd.CurrentSquareValue = SquareValue.NotSet;
-                    squares[i][j] = toAdd;
-                }
-            }
-            this.CurrentGameBoard = gameBoard;
+            return new Unsubscriber<SquareValue>(_turnChangeObservers, observer);
         }
 
         public void GameWinSubscribe(IGameWinObserver observer)
         {
-            this.gameWinObservers.Add(observer);
+            this._gameWinObservers.Add(observer);
         }
 
         public void GameWinUnsubscribe(IGameWinObserver observer)
         {
-            this.gameWinObservers.Remove(observer);
+            this._gameWinObservers.Remove(observer);
         }
 
         public void NotifySubscribersOfWin()
         {
-            foreach (var observer in gameWinObservers)
+            foreach (var observer in _gameWinObservers)
             {
                 observer.GameWonBy(GameWinner);
             }
         }
 
-        internal class Unsubscriber<SquareInfo> : IDisposable
+        private void SwitchPlayer()
         {
-            private List<IObserver<SquareInfo>> _observers;
-            private IObserver<SquareInfo> _observer;
+            PlayerSquareValue = PlayerSquareValue == SquareValue.X ? SquareValue.O : SquareValue.X;
+        }
 
-            internal Unsubscriber(List<IObserver<SquareInfo>> observers, IObserver<SquareInfo> observer)
+        private void NotifyTurnChangeObservers(SquareValue value)
+        {
+            foreach (var sqValObserver in _turnChangeObservers)
+            {
+                sqValObserver.OnNext(value);
+            }
+        }
+
+        private void InitializeBoard()
+        {
+            var gameBoard = new GameBoardModel();
+            var squares = gameBoard.Squares;
+            for (var i = 0; i < NumRowsCols; i++)
+            {
+                for (var j = 0; j < NumRowsCols; j++)
+                {
+                    var toAdd = new GameBoardSquareModel
+                    {
+                        Row = i,
+                        Column = j,
+                        CurrentSquareValue = SquareValue.NotSet
+                    };
+                    squares[i][j] = toAdd;
+                }
+            }
+            CurrentGameBoard = gameBoard;
+        }
+
+        internal class Unsubscriber<TSquareInfo> : IDisposable
+        {
+            private readonly List<IObserver<TSquareInfo>> _observers;
+            private readonly IObserver<TSquareInfo> _observer;
+
+            internal Unsubscriber(List<IObserver<TSquareInfo>> observers, IObserver<TSquareInfo> observer)
             {
                 this._observers = observers;
                 this._observer = observer;

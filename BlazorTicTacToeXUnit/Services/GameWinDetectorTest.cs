@@ -6,14 +6,14 @@ namespace BlazorTicTacToeXUnit.Services
 {
     public class GameWinDetectorTest
     {
-        private GameWinDetector gameWinDetector = new GameWinDetector();
+        private readonly GameWinDetector _gameWinDetector = new GameWinDetector();
 
         [Fact]
         public void DetectWinner_EmptyBoard()
         {
             GameBoardModel arg = new GameBoardModel();
             GenerateEmptySquares(arg.Squares);
-            SquareValue result = gameWinDetector.DetectWinner(arg);
+            SquareValue result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.NotSet, result);
         }
 
@@ -25,7 +25,7 @@ namespace BlazorTicTacToeXUnit.Services
             arg.Squares[0][0] = CreateSquareModelX();
             arg.Squares[0][1] = CreateSquareModelX();
             arg.Squares[0][2] = CreateSquareModelX();
-            SquareValue result = gameWinDetector.DetectWinner(arg);
+            SquareValue result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.X, result);
         }
 
@@ -37,7 +37,7 @@ namespace BlazorTicTacToeXUnit.Services
             arg.Squares[1][0] = CreateSquareModelX();
             arg.Squares[1][1] = CreateSquareModelX();
             arg.Squares[1][2] = CreateSquareModelX();
-            SquareValue result = gameWinDetector.DetectWinner(arg);
+            SquareValue result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.X, result);
         }
 
@@ -49,7 +49,7 @@ namespace BlazorTicTacToeXUnit.Services
             arg.Squares[2][0] = CreateSquareModelX();
             arg.Squares[2][1] = CreateSquareModelX();
             arg.Squares[2][2] = CreateSquareModelX();
-            SquareValue result = gameWinDetector.DetectWinner(arg);
+            SquareValue result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.X, result);
         }
 
@@ -61,7 +61,7 @@ namespace BlazorTicTacToeXUnit.Services
             arg.Squares[0][0] = CreateSquareModelX();
             arg.Squares[1][0] = CreateSquareModelX();
             arg.Squares[2][0] = CreateSquareModelX();
-            SquareValue result = gameWinDetector.DetectWinner(arg);
+            SquareValue result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.X, result);
         }
 
@@ -73,7 +73,7 @@ namespace BlazorTicTacToeXUnit.Services
             arg.Squares[0][1] = CreateSquareModelX();
             arg.Squares[1][1] = CreateSquareModelX();
             arg.Squares[2][1] = CreateSquareModelX();
-            SquareValue result = gameWinDetector.DetectWinner(arg);
+            SquareValue result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.X, result);
         }
 
@@ -85,7 +85,7 @@ namespace BlazorTicTacToeXUnit.Services
             arg.Squares[0][2] = CreateSquareModelX();
             arg.Squares[1][2] = CreateSquareModelX();
             arg.Squares[2][2] = CreateSquareModelX();
-            SquareValue result = gameWinDetector.DetectWinner(arg);
+            SquareValue result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.X, result);
         }
 
@@ -97,7 +97,7 @@ namespace BlazorTicTacToeXUnit.Services
             arg.Squares[0][0] = CreateSquareModelX();
             arg.Squares[1][1] = CreateSquareModelX();
             arg.Squares[2][2] = CreateSquareModelX();
-            SquareValue result = gameWinDetector.DetectWinner(arg);
+            SquareValue result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.X, result);
         }
 
@@ -109,22 +109,21 @@ namespace BlazorTicTacToeXUnit.Services
             arg.Squares[0][2] = CreateSquareModelX();
             arg.Squares[1][1] = CreateSquareModelX();
             arg.Squares[2][0] = CreateSquareModelX();
-            SquareValue result = gameWinDetector.DetectWinner(arg);
+            SquareValue result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.X, result);
         }
 
-        private GameBoardSquareModel[][] GenerateEmptySquares(GameBoardSquareModel[][] squares)
+        private void GenerateEmptySquares(GameBoardSquareModel[][] squares)
         {
-            for (int i = 0; i < GameManager.NUM_ROWS_COLS; i++)
+            for (int i = 0; i < GameManager.NumRowsCols; i++)
             {
-                for (int j = 0; j < GameManager.NUM_ROWS_COLS; j++)
+                for (int j = 0; j < GameManager.NumRowsCols; j++)
                 {
                     GameBoardSquareModel toAdd = new GameBoardSquareModel();
                     toAdd.CurrentSquareValue = SquareValue.NotSet;
                     squares[i][j] = toAdd;
                 }
             }
-            return squares;
         }
 
         private GameBoardSquareModel CreateSquareModelX()

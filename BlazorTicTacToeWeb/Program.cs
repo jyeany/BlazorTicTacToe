@@ -16,8 +16,8 @@ namespace BlazorTicTacToeWeb
 
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(builder.HostEnvironment.BaseAddress) });            
             builder.Services
-                .AddSingleton<GameManager>()
-                .AddSingleton<GameWinDetector>();            
+                .AddSingleton<IGameManager, GameManager>()
+                .AddSingleton<IGameWinDetector, GameWinDetector>();
 
             await builder.Build().RunAsync();
         }
