@@ -1,6 +1,7 @@
 ﻿using BlazorTicTacToeWeb.Models;
 using System;
 using System.Collections.Generic;
+using BlazorTicTacToeWeb.Services.CpuPlayer;
 
 namespace BlazorTicTacToeWeb.Services
 {
@@ -22,6 +23,8 @@ namespace BlazorTicTacToeWeb.Services
 
         private readonly List<IObserver<SquareValue>> _turnChangeObservers = new();
 
+        private ICpuPlayer _cpuPlayer;
+
         public const int NumRowsCols = 3;
 
         public GameManager(IGameWinDetector gameWinDetector)
@@ -33,25 +36,39 @@ namespace BlazorTicTacToeWeb.Services
         {
             CurrentGameType = gameType;
             PlayerSquareValue = SquareValue.X; // x always goes first
-            InitializeBoard();
+            CurrentGameBoard = new GameBoardModel();
+            if (CurrentGameType == GameType.OnePlayer)
+            {
+                _cpuPlayer = new CpuPlayerRandom();
+            }
         }
 
         public void MakeMove(GameBoardSquareModel squareModel)
         {
-            if (squareModel.CurrentSquareValue == SquareValue.NotSet)
+            while (true)
             {
-                squareModel.CurrentSquareValue = PlayerSquareValue;
-                SquareValue winnerValue = _gameWinDetector.DetectWinner(CurrentGameBoard);
-                if (winnerValue == SquareValue.NotSet)
+                if (squareModel.CurrentSquareValue == SquareValue.NotSet)
                 {
-                    SwitchPlayer();
-                    NotifyTurnChangeObservers(PlayerSquareValue);
+                    squareModel.CurrentSquareValue = PlayerSquareValue;
+                    var winnerValue = _gameWinDetector.DetectWinner(CurrentGameBoard);
+                    if (winnerValue == SquareValue.NotSet)
+                    {
+                        SwitchPlayer();
+                        if (CurrentGameType == GameType.OnePlayer && PlayerSquareValue == SquareValue.O)
+                        {
+                            var move = _cpuPlayer.ChooseMove(CurrentGameBoard);
+                            squareModel = move;
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        GameWinner = winnerValue;
+                        NotifySubscribersOfWin();
+                    }
                 }
-                else
-                {
-                    GameWinner = winnerValue;
-                    NotifySubscribersOfWin();
-                }
+
+                break;
             }
         }
 
@@ -85,6 +102,7 @@ namespace BlazorTicTacToeWeb.Services
         private void SwitchPlayer()
         {
             PlayerSquareValue = PlayerSquareValue == SquareValue.X ? SquareValue.O : SquareValue.X;
+            NotifyTurnChangeObservers(PlayerSquareValue);
         }
 
         private void NotifyTurnChangeObservers(SquareValue value)
@@ -93,26 +111,6 @@ namespace BlazorTicTacToeWeb.Services
             {
                 sqValObserver.OnNext(value);
             }
-        }
-
-        private void InitializeBoard()
-        {
-            var gameBoard = new GameBoardModel();
-            var squares = gameBoard.Squares;
-            for (var i = 0; i < NumRowsCols; i++)
-            {
-                for (var j = 0; j < NumRowsCols; j++)
-                {
-                    var toAdd = new GameBoardSquareModel
-                    {
-                        Row = i,
-                        Column = j,
-                        CurrentSquareValue = SquareValue.NotSet
-                    };
-                    squares[i][j] = toAdd;
-                }
-            }
-            CurrentGameBoard = gameBoard;
         }
 
         internal class Unsubscriber<TSquareInfo> : IDisposable

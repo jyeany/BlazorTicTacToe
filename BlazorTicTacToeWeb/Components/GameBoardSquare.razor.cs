@@ -1,10 +1,11 @@
-﻿using BlazorTicTacToeWeb.Models;
+﻿using System;
+using BlazorTicTacToeWeb.Models;
 using BlazorTicTacToeWeb.Services;
 using Microsoft.AspNetCore.Components;
 
 namespace BlazorTicTacToeWeb.Components
 {
-    public partial class GameBoardSquare
+    public partial class GameBoardSquare : IObserver<SquareValue>
     {
         [Parameter]
         public GameBoardSquareModel GameBoardSquareModel { get; set; }
@@ -12,9 +13,14 @@ namespace BlazorTicTacToeWeb.Components
         [Inject]
         protected IGameManager GameManager { get; set; }
 
+        protected override void OnInitialized()
+        {
+            GameManager.Subscribe(this);
+        }
+
         public void HandleClick()
         {
-            GameManager.MakeMove(this.GameBoardSquareModel);
+            GameManager.MakeMove(GameBoardSquareModel);
         }
 
         public string BtnTypeClass()
@@ -28,6 +34,21 @@ namespace BlazorTicTacToeWeb.Components
                 default:
                     return "btn-secondary";
             }
+        }
+
+        public void OnCompleted()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnError(Exception error)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void OnNext(SquareValue value)
+        {
+            StateHasChanged();
         }
     }
 }
