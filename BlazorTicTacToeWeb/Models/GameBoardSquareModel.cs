@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace BlazorTicTacToeWeb.Models
+﻿namespace BlazorTicTacToeWeb.Models
 {
     public enum SquareValue { NotSet = 0, X, O }
 
@@ -15,17 +10,12 @@ namespace BlazorTicTacToeWeb.Models
 
         public SquareValue CurrentSquareValue { get; set; }
 
-        public override string ToString()
-        {
-            switch (CurrentSquareValue)
+        public override string ToString() =>
+            CurrentSquareValue switch
             {
-                case SquareValue.X:
-                    return "X";
-                case SquareValue.O:
-                    return "O";
-                default:
-                    return "--";
-            }            
-        }
+                SquareValue.X => "X",
+                SquareValue.O => "O",
+                _ => "--"
+            };
     }
 }

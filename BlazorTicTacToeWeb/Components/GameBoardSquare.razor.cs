@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace BlazorTicTacToeWeb.Components
 {
-    public partial class GameBoardSquare : IObserver<SquareValue>
+    public partial class GameBoardSquare : IObserver<SquareValue>, IGameWinObserver
     {
         [Parameter]
         public GameBoardSquareModel GameBoardSquareModel { get; set; }
@@ -47,6 +47,11 @@ namespace BlazorTicTacToeWeb.Components
         }
 
         public void OnNext(SquareValue value)
+        {
+            StateHasChanged();
+        }
+
+        public void GameWonBy(SquareValue squareValue)
         {
             StateHasChanged();
         }

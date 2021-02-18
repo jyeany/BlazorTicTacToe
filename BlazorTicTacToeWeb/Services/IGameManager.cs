@@ -15,5 +15,7 @@ namespace BlazorTicTacToeWeb.Services
 
         void MakeMove(GameBoardSquareModel squareModel);
 
+        public SquareValue GameWinner { get; set; }
+
     }
 }

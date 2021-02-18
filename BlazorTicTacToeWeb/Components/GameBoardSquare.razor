@@ -1,3 +1,16 @@
-﻿<button class="btn @BtnTypeClass() btn-lg" @onclick="HandleClick">
-    @GameBoardSquareModel.ToString()
-</button>
+﻿@using BlazorTicTacToeWeb.Services
+@using BlazorTicTacToeWeb.Models
+
+@if (GameManager.GameWinner == SquareValue.NotSet)
+{
+    <button class="btn @BtnTypeClass() btn-lg" @onclick="HandleClick"> 
+        @GameBoardSquareModel.ToString()
+    </button>
+}
+else
+{
+    <button class="btn @BtnTypeClass() btn-lg" @onclick="HandleClick" disabled> 
+        @GameBoardSquareModel.ToString()
+    </button>
+}
+
