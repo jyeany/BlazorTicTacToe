@@ -3,7 +3,7 @@ using System;
 
 namespace BlazorTicTacToeWeb.Services
 {
-    public interface IGameManager : IObservable<SquareValue>, IGameWinObservable
+    public interface IGameManager : IGameWinObservable
     {
         public SquareValue PlayerSquareValue { get; set; }
 
@@ -17,5 +17,6 @@ namespace BlazorTicTacToeWeb.Services
 
         public SquareValue GameWinner { get; set; }
 
+        public event EventHandler<SquareValueEventArgs> TurnChangeEvent;
     }
 }

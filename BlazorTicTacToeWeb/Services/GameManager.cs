@@ -14,10 +14,12 @@ namespace BlazorTicTacToeWeb.Services
         public GameType CurrentGameType { get; set; }
 
         public GameBoardModel CurrentGameBoard { get; set; }
-
+        
         public SquareValue PlayerSquareValue { get; set; }
 
         public SquareValue GameWinner { get; set; }
+        
+        public event EventHandler<SquareValueEventArgs> TurnChangeEvent;
 
         private readonly List<IGameWinObserver> _gameWinObservers = new();
 
@@ -67,7 +69,6 @@ namespace BlazorTicTacToeWeb.Services
                         NotifySubscribersOfWin();
                     }
                 }
-
                 break;
             }
         }
@@ -99,9 +100,17 @@ namespace BlazorTicTacToeWeb.Services
             }
         }
 
+        protected virtual void OnTurnChanged(SquareValueEventArgs e)
+        {
+            var handler = TurnChangeEvent;
+            handler?.Invoke(this, e);
+        }
+        
         private void SwitchPlayer()
         {
             PlayerSquareValue = PlayerSquareValue == SquareValue.X ? SquareValue.O : SquareValue.X;
+            var eventArgs = new SquareValueEventArgs() {SquareValue = PlayerSquareValue};
+            OnTurnChanged(eventArgs);
             NotifyTurnChangeObservers(PlayerSquareValue);
         }
 
@@ -113,7 +122,7 @@ namespace BlazorTicTacToeWeb.Services
             }
         }
 
-        internal class Unsubscriber<TSquareInfo> : IDisposable
+        private class Unsubscriber<TSquareInfo> : IDisposable
         {
             private readonly List<IObserver<TSquareInfo>> _observers;
             private readonly IObserver<TSquareInfo> _observer;

@@ -5,32 +5,21 @@ using System;
 
 namespace BlazorTicTacToeWeb.Components
 {
-    public partial class CurrentPlayerPrompt: IObserver<SquareValue>
+    public partial class CurrentPlayerPrompt
     {
-        [Inject]
-        protected IGameManager GameManager { get; set; }
+        [Inject] 
+        private IGameManager GameManager { get; set; }
 
-        public SquareValue CurrentSquareValue { get; set; }
+        private SquareValue CurrentSquareValue { get; set; }
 
         protected override void OnInitialized()
         {
-            GameManager.Subscribe(this);
             CurrentSquareValue = GameManager.PlayerSquareValue;
         }
 
-        public void OnCompleted()
+        private void OnTurnChangeEvent(object sender, SquareValueEventArgs e)
         {
-            throw new NotImplementedException();
-        }
-
-        public void OnError(Exception error)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnNext(SquareValue value)
-        {
-            this.CurrentSquareValue = value;
+            CurrentSquareValue = e.SquareValue;
             StateHasChanged();
         }
     }
