@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Components;
 
 namespace BlazorTicTacToeWeb.Components
 {
-    public partial class GameBoardSquare : IGameWinObserver
+    public partial class GameBoardSquare
     {
         [Parameter]
         public GameBoardSquareModel GameBoardSquareModel { get; set; }
@@ -31,11 +31,6 @@ namespace BlazorTicTacToeWeb.Components
                 SquareValue.O => "btn-danger",
                 _ => "btn-secondary"
             };
-        }
-
-        public void GameWonBy(SquareValue squareValue)
-        {
-            StateHasChanged();
         }
 
         private void OnTurnChangeEvent(object sender, SquareValueEventArgs e)

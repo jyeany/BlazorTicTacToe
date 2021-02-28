@@ -20,10 +20,7 @@ namespace BlazorTicTacToeWeb.Services
         public SquareValue GameWinner { get; set; }
         
         public event EventHandler<SquareValueEventArgs> TurnChangeEvent;
-
-        private readonly List<IGameWinObserver> _gameWinObservers = new();
-
-        private readonly List<IObserver<SquareValue>> _turnChangeObservers = new();
+        public event EventHandler<SquareValueEventArgs> GameWinEvent;
 
         private ICpuPlayer _cpuPlayer;
 
@@ -66,43 +63,23 @@ namespace BlazorTicTacToeWeb.Services
                     else
                     {
                         GameWinner = winnerValue;
-                        NotifySubscribersOfWin();
+                        var gameWonArgs = new SquareValueEventArgs() {SquareValue = winnerValue};
+                        OnGameWon(gameWonArgs);
                     }
                 }
                 break;
             }
         }
 
-        public IDisposable Subscribe(IObserver<SquareValue> observer)
-        {
-            if (!_turnChangeObservers.Contains(observer))
-            {
-                _turnChangeObservers.Add(observer);
-            }
-            return new Unsubscriber<SquareValue>(_turnChangeObservers, observer);
-        }
-
-        public void GameWinSubscribe(IGameWinObserver observer)
-        {
-            this._gameWinObservers.Add(observer);
-        }
-
-        public void GameWinUnsubscribe(IGameWinObserver observer)
-        {
-            this._gameWinObservers.Remove(observer);
-        }
-
-        public void NotifySubscribersOfWin()
-        {
-            foreach (var observer in _gameWinObservers)
-            {
-                observer.GameWonBy(GameWinner);
-            }
-        }
-
-        protected virtual void OnTurnChanged(SquareValueEventArgs e)
+        private void OnTurnChanged(SquareValueEventArgs e)
         {
             var handler = TurnChangeEvent;
+            handler?.Invoke(this, e);
+        }
+
+        private void OnGameWon(SquareValueEventArgs e)
+        {
+            var handler = GameWinEvent;
             handler?.Invoke(this, e);
         }
         
@@ -111,33 +88,6 @@ namespace BlazorTicTacToeWeb.Services
             PlayerSquareValue = PlayerSquareValue == SquareValue.X ? SquareValue.O : SquareValue.X;
             var eventArgs = new SquareValueEventArgs() {SquareValue = PlayerSquareValue};
             OnTurnChanged(eventArgs);
-            NotifyTurnChangeObservers(PlayerSquareValue);
-        }
-
-        private void NotifyTurnChangeObservers(SquareValue value)
-        {
-            foreach (var sqValObserver in _turnChangeObservers)
-            {
-                sqValObserver.OnNext(value);
-            }
-        }
-
-        private class Unsubscriber<TSquareInfo> : IDisposable
-        {
-            private readonly List<IObserver<TSquareInfo>> _observers;
-            private readonly IObserver<TSquareInfo> _observer;
-
-            internal Unsubscriber(List<IObserver<TSquareInfo>> observers, IObserver<TSquareInfo> observer)
-            {
-                this._observers = observers;
-                this._observer = observer;
-            }
-
-            public void Dispose()
-            {
-                if (_observers.Contains(_observer))
-                    _observers.Remove(_observer);
-            }
         }
 
     }

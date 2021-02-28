@@ -6,30 +6,30 @@ using System.Threading.Tasks;
 
 namespace BlazorTicTacToeWeb.Components
 {
-    public partial class GameBoard: IGameWinObserver
+    public partial class GameBoard
     {
         [Inject]
-        protected IGameManager GameManager { get; set; }
+        private IGameManager GameManager { get; set; }
 
-        protected SquareValue CurrentPlayerSquareValue { get; set; }
+        private SquareValue CurrentPlayerSquareValue { get; set; }
         
-        protected SquareValue GameWinner { get; set; }
+        private SquareValue GameWinner { get; set; }
 
         protected override void OnInitialized()
         {            
             CurrentPlayerSquareValue = GameManager.PlayerSquareValue;
             GameWinner = SquareValue.NotSet;
-            GameManager.GameWinSubscribe(this);
+            GameManager.GameWinEvent += OnGameWon;
         }        
 
-        protected GameBoardSquareModel[][] GameBoardSquares()
+        private GameBoardSquareModel[][] GameBoardSquares()
         {
             return GameManager.CurrentGameBoard.Squares;
         }
 
-        public void GameWonBy(SquareValue squareValue)
+        private void OnGameWon(object sender, SquareValueEventArgs e)
         {
-            GameWinner = squareValue;
+            GameWinner = e.SquareValue;
             StateHasChanged();
         }
     }
