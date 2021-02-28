@@ -19,6 +19,8 @@ namespace BlazorTicTacToeWeb.Services
 
         public SquareValue GameWinner { get; set; }
         
+        public bool IsGameDraw { get; set; }
+
         public event EventHandler<SquareValueEventArgs> TurnChangeEvent;
         public event EventHandler<SquareValueEventArgs> GameWinEvent;
 
@@ -36,6 +38,7 @@ namespace BlazorTicTacToeWeb.Services
             CurrentGameType = gameType;
             PlayerSquareValue = SquareValue.X; // x always goes first
             CurrentGameBoard = new GameBoardModel();
+            IsGameDraw = false;
             if (CurrentGameType == GameType.OnePlayer)
             {
                 _cpuPlayer = new CpuPlayerRandom();
@@ -50,7 +53,8 @@ namespace BlazorTicTacToeWeb.Services
                 {
                     squareModel.CurrentSquareValue = PlayerSquareValue;
                     var winnerValue = _gameWinDetector.DetectWinner(CurrentGameBoard);
-                    if (winnerValue == SquareValue.NotSet)
+                    IsGameDraw = _gameWinDetector.IsGameDraw(CurrentGameBoard);
+                    if (winnerValue == SquareValue.NotSet && !IsGameDraw)
                     {
                         SwitchPlayer();
                         if (CurrentGameType == GameType.OnePlayer && PlayerSquareValue == SquareValue.O)

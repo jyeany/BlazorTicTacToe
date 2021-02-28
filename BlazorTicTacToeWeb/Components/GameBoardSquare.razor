@@ -1,7 +1,7 @@
 ﻿@using BlazorTicTacToeWeb.Services
 @using BlazorTicTacToeWeb.Models
 
-@if (GameManager.GameWinner == SquareValue.NotSet)
+@if (GameManager.GameWinner == SquareValue.NotSet && !GameManager.IsGameDraw)
 {
     <button class="btn @BtnTypeClass() btn-lg" @onclick="HandleClick"> 
         @GameBoardSquareModel.ToString()

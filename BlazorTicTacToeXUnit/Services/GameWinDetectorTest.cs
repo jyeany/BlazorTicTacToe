@@ -11,126 +11,135 @@ namespace BlazorTicTacToeXUnit.Services
         [Fact]
         public void DetectWinner_EmptyBoard()
         {
-            GameBoardModel arg = new GameBoardModel();
-            GenerateEmptySquares(arg.Squares);
-            SquareValue result = _gameWinDetector.DetectWinner(arg);
+            var arg = new GameBoardModel();
+            var result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.NotSet, result);
         }
 
         [Fact]
         public void DetectWinner_FirstRow()
         {
-            GameBoardModel arg = new GameBoardModel();
-            GenerateEmptySquares(arg.Squares);
+            var arg = new GameBoardModel();
             arg.Squares[0][0] = CreateSquareModelX();
             arg.Squares[0][1] = CreateSquareModelX();
             arg.Squares[0][2] = CreateSquareModelX();
-            SquareValue result = _gameWinDetector.DetectWinner(arg);
+            var result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.X, result);
         }
 
         [Fact]
         public void DetectWinner_SecondRow()
         {
-            GameBoardModel arg = new GameBoardModel();
-            GenerateEmptySquares(arg.Squares);
+            var arg = new GameBoardModel();
             arg.Squares[1][0] = CreateSquareModelX();
             arg.Squares[1][1] = CreateSquareModelX();
             arg.Squares[1][2] = CreateSquareModelX();
-            SquareValue result = _gameWinDetector.DetectWinner(arg);
+            var result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.X, result);
         }
 
         [Fact]
         public void DetectWinner_ThirdRow()
         {
-            GameBoardModel arg = new GameBoardModel();
-            GenerateEmptySquares(arg.Squares);
+            var arg = new GameBoardModel();
             arg.Squares[2][0] = CreateSquareModelX();
             arg.Squares[2][1] = CreateSquareModelX();
             arg.Squares[2][2] = CreateSquareModelX();
-            SquareValue result = _gameWinDetector.DetectWinner(arg);
+            var result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.X, result);
         }
 
         [Fact]
         public void DetectWinner_FirstColumn()
         {
-            GameBoardModel arg = new GameBoardModel();
-            GenerateEmptySquares(arg.Squares);
+            var arg = new GameBoardModel();
             arg.Squares[0][0] = CreateSquareModelX();
             arg.Squares[1][0] = CreateSquareModelX();
             arg.Squares[2][0] = CreateSquareModelX();
-            SquareValue result = _gameWinDetector.DetectWinner(arg);
+            var result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.X, result);
         }
 
         [Fact]
         public void DetectWinner_SecondColumn()
         {
-            GameBoardModel arg = new GameBoardModel();
-            GenerateEmptySquares(arg.Squares);
+            var arg = new GameBoardModel();
             arg.Squares[0][1] = CreateSquareModelX();
             arg.Squares[1][1] = CreateSquareModelX();
             arg.Squares[2][1] = CreateSquareModelX();
-            SquareValue result = _gameWinDetector.DetectWinner(arg);
+            var result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.X, result);
         }
 
         [Fact]
         public void DetectWinner_ThirdColumn()
         {
-            GameBoardModel arg = new GameBoardModel();
-            GenerateEmptySquares(arg.Squares);
+            var arg = new GameBoardModel();
             arg.Squares[0][2] = CreateSquareModelX();
             arg.Squares[1][2] = CreateSquareModelX();
             arg.Squares[2][2] = CreateSquareModelX();
-            SquareValue result = _gameWinDetector.DetectWinner(arg);
+            var result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.X, result);
         }
 
         [Fact]
         public void DetectWinner_ForwardSlant()
         {
-            GameBoardModel arg = new GameBoardModel();
-            GenerateEmptySquares(arg.Squares);
+            var arg = new GameBoardModel();
             arg.Squares[0][0] = CreateSquareModelX();
             arg.Squares[1][1] = CreateSquareModelX();
             arg.Squares[2][2] = CreateSquareModelX();
-            SquareValue result = _gameWinDetector.DetectWinner(arg);
+            var result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.X, result);
         }
 
         [Fact]
         public void DetectWinner_BackSlant()
         {
-            GameBoardModel arg = new GameBoardModel();
-            GenerateEmptySquares(arg.Squares);
+            var arg = new GameBoardModel();
             arg.Squares[0][2] = CreateSquareModelX();
             arg.Squares[1][1] = CreateSquareModelX();
             arg.Squares[2][0] = CreateSquareModelX();
-            SquareValue result = _gameWinDetector.DetectWinner(arg);
+            var result = _gameWinDetector.DetectWinner(arg);
             Assert.Equal(SquareValue.X, result);
         }
 
-        private void GenerateEmptySquares(GameBoardSquareModel[][] squares)
+        [Fact]
+        public void IsGameDraw_FreshBoard()
         {
-            for (int i = 0; i < GameManager.NumRowsCols; i++)
-            {
-                for (int j = 0; j < GameManager.NumRowsCols; j++)
-                {
-                    GameBoardSquareModel toAdd = new GameBoardSquareModel();
-                    toAdd.CurrentSquareValue = SquareValue.NotSet;
-                    squares[i][j] = toAdd;
-                }
-            }
+            var arg = new GameBoardModel();
+            var isDraw = _gameWinDetector.IsGameDraw(arg);
+            Assert.False(isDraw);
         }
 
-        private GameBoardSquareModel CreateSquareModelX()
+        [Fact]
+        public void IsGameDraw_GameIsDraw()
         {
-            var toReturn = new GameBoardSquareModel();
-            toReturn.CurrentSquareValue = SquareValue.X;
-            return toReturn;
+            var arg = new GameBoardModel();
+            arg.Squares[0][0] = CreateSquareModelX();
+            arg.Squares[0][1] = CreateSquareModelO();
+            arg.Squares[0][2] = CreateSquareModelX();
+            
+            arg.Squares[1][0] = CreateSquareModelX();
+            arg.Squares[1][1] = CreateSquareModelO();
+            arg.Squares[1][2] = CreateSquareModelX();
+            
+            arg.Squares[2][0] = CreateSquareModelO();
+            arg.Squares[2][1] = CreateSquareModelX();
+            arg.Squares[2][2] = CreateSquareModelO();
+            
+            var isDraw = _gameWinDetector.IsGameDraw(arg);
+            Assert.True(isDraw);
+        }
+
+        private static GameBoardSquareModel CreateSquareModelX()
+        {
+            return new() {CurrentSquareValue = SquareValue.X};
+        }
+
+        private static GameBoardSquareModel CreateSquareModelO()
+        {
+            return new() {CurrentSquareValue = SquareValue.O};
         }
     }
 }

@@ -5,6 +5,6 @@ namespace BlazorTicTacToeWeb.Services
 {
     public class SquareValueEventArgs : EventArgs
     {
-        public SquareValue SquareValue { get; set; }
+        public SquareValue SquareValue { get; init; }
     }
 }

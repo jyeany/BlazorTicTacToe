@@ -1,4 +1,5 @@
-﻿using BlazorTicTacToeWeb.Models;
+﻿using System;
+using BlazorTicTacToeWeb.Models;
 
 namespace BlazorTicTacToeWeb.Services
 {
@@ -6,12 +7,12 @@ namespace BlazorTicTacToeWeb.Services
     {
         public SquareValue DetectWinner(GameBoardModel gameBoardModel)
         {
-            SquareValue result = SquareValue.NotSet;
+            var result = SquareValue.NotSet;
             var squares = gameBoardModel.Squares;
-            SquareValue slantWin = HasSlantWin(squares);
+            var slantWin = HasSlantWin(squares);
             if (slantWin == SquareValue.NotSet)
             {
-                SquareValue rowColWin = HasRowOrColumnWin(squares);
+                var rowColWin = HasRowOrColumnWin(squares);
                 if (rowColWin != SquareValue.NotSet)
                 {
                     result = rowColWin;
@@ -21,8 +22,32 @@ namespace BlazorTicTacToeWeb.Services
             {
                 result = slantWin;
             }
-            
+
             return result;
+        }
+
+        public bool IsGameDraw(GameBoardModel gameBoardModel)
+        {
+            var isDraw = false;
+            var totalSquares = (int) Math.Pow(GameManager.NumRowsCols, 2);
+            var setSquares = 0;
+            for (var i = 0; i < GameManager.NumRowsCols; i++)
+            {
+                for (var j = 0; j < GameManager.NumRowsCols; j++)
+                {
+                    if (gameBoardModel.Squares[i][j].CurrentSquareValue != SquareValue.NotSet)
+                    {
+                        setSquares++;
+                    }
+                }
+            }
+
+            if (totalSquares == setSquares)
+            {
+                isDraw = true;
+            }
+
+            return isDraw && DetectWinner(gameBoardModel) == SquareValue.NotSet;
         }
 
         private SquareValue HasSlantWin(GameBoardSquareModel[][] squares)
@@ -35,8 +60,8 @@ namespace BlazorTicTacToeWeb.Services
                 slantWin = squares[0][0].CurrentSquareValue;
             }
             else if (squares[0][2].CurrentSquareValue != SquareValue.NotSet
-                && squares[0][2].CurrentSquareValue == squares[1][1].CurrentSquareValue
-                && squares[1][1].CurrentSquareValue == squares[2][0].CurrentSquareValue)
+                     && squares[0][2].CurrentSquareValue == squares[1][1].CurrentSquareValue
+                     && squares[1][1].CurrentSquareValue == squares[2][0].CurrentSquareValue)
             {
                 slantWin = squares[1][1].CurrentSquareValue;
             }
@@ -44,6 +69,7 @@ namespace BlazorTicTacToeWeb.Services
             {
                 slantWin = SquareValue.NotSet;
             }
+
             return slantWin;
         }
 
@@ -63,24 +89,27 @@ namespace BlazorTicTacToeWeb.Services
                     {
                         rowMatches++;
                     }
+
                     var columnCompareValue = squares[1][i].CurrentSquareValue;
-                    if (currentColumnValue != SquareValue.NotSet 
+                    if (currentColumnValue != SquareValue.NotSet
                         && currentColumnValue == columnCompareValue)
                     {
                         columnMatches++;
                     }
                 }
+
                 if (rowMatches == GameManager.NumRowsCols)
                 {
                     winningValue = squares[i][1].CurrentSquareValue;
                     break;
-                } 
+                }
                 else if (columnMatches == GameManager.NumRowsCols)
                 {
                     winningValue = squares[1][i].CurrentSquareValue;
                     break;
                 }
             }
+
             return winningValue;
         }
     }

@@ -3,20 +3,19 @@
 
 @if (GameManager.CurrentGameType == GameType.NotChosen)
 {
-<div>
-    <h3>Please Choose the Number of Players</h3>
-    <button class="btn btn-primary"
-    @onclick="@(e => StartGame(GameType.OnePlayer))">
-        One Player
-    </button>
-    <button class="btn btn-info"
-    @onclick="@(e => StartGame(GameType.TwoPlayer))">
-        Two Player
-    </button>
-</div>
+    <div>
+        <h3>Please Choose the Number of Players</h3>
+        <button class="btn btn-primary"
+                @onclick="@(e => StartGame(GameType.OnePlayer))">
+            One Player
+        </button>
+        <button class="btn btn-info"
+                @onclick="@(e => StartGame(GameType.TwoPlayer))">
+            Two Player
+        </button>
+    </div>
 }
 else
-{    
+{
     <GameBoard></GameBoard>
 }
-

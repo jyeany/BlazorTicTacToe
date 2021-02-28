@@ -3,18 +3,22 @@
 
 @foreach (var row in GameBoardSquares())
 {
-  <div class="row m-3">
-    @foreach (var col in row)
-    {
-      <div class="col-sm-4" style="max-width: 50px">
-        <GameBoardSquare GameBoardSquareModel="@col"></GameBoardSquare>
-      </div>
-    }
-  </div>
+    <div class="row m-3">
+        @foreach (var col in row)
+        {
+            <div class="col-sm-4" style="max-width: 50px">
+                <GameBoardSquare GameBoardSquareModel="@col"></GameBoardSquare>
+            </div>
+        }
+    </div>
 }
-@if (GameWinner == SquareValue.NotSet)
+@if (GameWinner == SquareValue.NotSet && !GameManager.IsGameDraw)
 {
-<CurrentPlayerPrompt></CurrentPlayerPrompt>
+    <CurrentPlayerPrompt></CurrentPlayerPrompt>
+}
+else if (GameManager.IsGameDraw)
+{
+    <p>The game is a draw</p>
 }
 else
 {
