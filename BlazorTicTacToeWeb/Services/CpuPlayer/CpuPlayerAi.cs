@@ -21,7 +21,7 @@ namespace BlazorTicTacToeWeb.Services.CpuPlayer
             return nextMove;
         }
 
-        public bool IsFirstMove(GameBoardModel gameBoard)
+        public static bool IsFirstMove(GameBoardModel gameBoard)
         {
             var isFirstMove = true;
             var squaresTaken = 0;

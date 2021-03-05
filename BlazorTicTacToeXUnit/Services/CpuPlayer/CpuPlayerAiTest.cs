@@ -14,7 +14,7 @@ namespace BlazorTicTacToeXUnit.Services.CpuPlayer
             var gameBoardModel = new GameBoardModel();
             gameBoardModel.Squares[0][0].CurrentSquareValue = SquareValue.X;
             gameBoardModel.Squares[0][1].CurrentSquareValue = SquareValue.O;
-            var result = _cpuPlayerAi.IsFirstMove(gameBoardModel);
+            var result = CpuPlayerAi.IsFirstMove(gameBoardModel);
             Assert.False(result);
         }
 
@@ -23,7 +23,7 @@ namespace BlazorTicTacToeXUnit.Services.CpuPlayer
         {
             var gameBoardModel = new GameBoardModel();
             gameBoardModel.Squares[0][0].CurrentSquareValue = SquareValue.X;
-            var result = _cpuPlayerAi.IsFirstMove(gameBoardModel);
+            var result = CpuPlayerAi.IsFirstMove(gameBoardModel);
             Assert.True(result);
         }
 
