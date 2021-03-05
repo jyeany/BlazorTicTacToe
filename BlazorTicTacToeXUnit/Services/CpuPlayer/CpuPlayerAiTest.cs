@@ -6,7 +6,7 @@ namespace BlazorTicTacToeXUnit.Services.CpuPlayer
 {
     public class CpuPlayerAiTest
     {
-        private readonly CpuPlayerAi _cpuPlayerAi = new CpuPlayerAi();
+        private readonly CpuPlayerAi _cpuPlayerAi = new();
         
         [Fact]
         public void IsFirstMove_NotFirst()
