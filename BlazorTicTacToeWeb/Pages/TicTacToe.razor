@@ -9,6 +9,10 @@
                 @onclick="@(e => StartGame(GameType.OnePlayer))">
             One Player
         </button>
+        <button class="btn btn-warning"
+                @onclick="@(() => StartGame(GameType.OnePlayerAi))">
+            One Player AI
+        </button>
         <button class="btn btn-info"
                 @onclick="@(e => StartGame(GameType.TwoPlayer))">
             Two Player

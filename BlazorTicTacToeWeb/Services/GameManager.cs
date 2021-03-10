@@ -4,7 +4,13 @@ using BlazorTicTacToeWeb.Services.CpuPlayer;
 
 namespace BlazorTicTacToeWeb.Services
 {
-    public enum GameType { NotChosen = 0, OnePlayer, TwoPlayer };
+    public enum GameType
+    {
+        NotChosen = 0, 
+        OnePlayer,
+        OnePlayerAi,
+        TwoPlayer
+    };
 
     public class GameManager : IGameManager
     {
@@ -38,10 +44,12 @@ namespace BlazorTicTacToeWeb.Services
             PlayerSquareValue = SquareValue.X; // x always goes first
             CurrentGameBoard = new GameBoardModel();
             IsGameDraw = false;
-            if (CurrentGameType == GameType.OnePlayer)
+            _cpuPlayer = CurrentGameType switch
             {
-                _cpuPlayer = new CpuPlayerRandom();
-            }
+                GameType.OnePlayer => new CpuPlayerRandom(),
+                GameType.OnePlayerAi => new CpuPlayerAi(),
+                _ => _cpuPlayer
+            };
         }
 
         public void MakeMove(GameBoardSquareModel squareModel)
@@ -56,7 +64,7 @@ namespace BlazorTicTacToeWeb.Services
                     if (winnerValue == SquareValue.NotSet && !IsGameDraw)
                     {
                         SwitchPlayer();
-                        if (CurrentGameType == GameType.OnePlayer && PlayerSquareValue == SquareValue.O)
+                        if (IsOnePlayerGame() && PlayerSquareValue == SquareValue.O)
                         {
                             var move = _cpuPlayer.ChooseMove(CurrentGameBoard);
                             squareModel = move;
@@ -72,6 +80,12 @@ namespace BlazorTicTacToeWeb.Services
                 }
                 break;
             }
+        }
+
+        private bool IsOnePlayerGame()
+        {
+            return CurrentGameType == GameType.OnePlayer
+                   || CurrentGameType == GameType.OnePlayerAi;
         }
 
         private void OnTurnChanged(SquareValueEventArgs e)
