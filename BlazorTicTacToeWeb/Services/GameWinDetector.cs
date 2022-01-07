@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using BlazorTicTacToeWeb.Models;
 
 namespace BlazorTicTacToeWeb.Services
@@ -73,14 +74,14 @@ namespace BlazorTicTacToeWeb.Services
             return slantWin;
         }
 
-        private SquareValue HasRowOrColumnWin(GameBoardSquareModel[][] squares)
+        private static SquareValue HasRowOrColumnWin(IReadOnlyList<GameBoardSquareModel[]> squares)
         {
-            SquareValue winningValue = SquareValue.NotSet;
-            for (int i = 0; i < GameManager.NumRowsCols; i++)
+            var winningValue = SquareValue.NotSet;
+            for (var i = 0; i < GameManager.NumRowsCols; i++)
             {
-                int rowMatches = 0;
-                int columnMatches = 0;
-                for (int j = 0; j < GameManager.NumRowsCols; j++)
+                var rowMatches = 0;
+                var columnMatches = 0;
+                for (var j = 0; j < GameManager.NumRowsCols; j++)
                 {
                     var currentRowValue = squares[i][j].CurrentSquareValue;
                     var currentColumnValue = squares[j][i].CurrentSquareValue;
@@ -103,7 +104,7 @@ namespace BlazorTicTacToeWeb.Services
                     winningValue = squares[i][1].CurrentSquareValue;
                     break;
                 }
-                else if (columnMatches == GameManager.NumRowsCols)
+                if (columnMatches == GameManager.NumRowsCols)
                 {
                     winningValue = squares[1][i].CurrentSquareValue;
                     break;
